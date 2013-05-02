@@ -25,9 +25,10 @@
       attach(widget.el, "click", function(event) {
         if (target(event).nodeName == "BUTTON") {
           if (getLoginState())
-            setLoginState(null);
+            setLoginState(null, false);
           else
-            setLoginState(window.prompt("Enter email address") || null);
+            setLoginState(window.prompt("Enter email address") || null,
+                          false);
         }
       });
       document.body.appendChild(widget.el);
@@ -57,18 +58,19 @@
     else
       element.attachEvent('on' + eventName, cb);
   };
-  var setLoginState = function(state) {
+  var setLoginState = function(state, notifyWatcher) {
+    if (typeof(notifyWatcher) == "undefined") notifyWatcher = true;
     state = state || null;
     if (getLoginState() === state)
       return;
     if (state) {
       window.localStorage.setItem(LOGIN_STATE_KEY, state);
       widget.update();
-      watchOptions.onlogin(state);
+      if (notifyWatcher) watchOptions.onlogin(state);
     } else {
       window.localStorage.removeItem(LOGIN_STATE_KEY);
       widget.update();
-      watchOptions.onlogout();
+      if (notifyWatcher) watchOptions.onlogout();
     }
   };
   var getLoginState = function() {
@@ -81,6 +83,8 @@
   var log = function(msg) {
     if (window.console && window.console.log)
       window.console.log("STUBBYID: " + msg);
+    if (navigator.id.stubby.onlog)
+      navigator.id.stubby.onlog(msg);
   };
   var watchOptions = {
     _onlogin: null,
@@ -106,6 +110,7 @@
         watchOptions._onlogout = null;
         setLoginState(null);
       },
+      onlog: null,
       setPersonaState: setLoginState,
       getPersonaState: getLoginState,
       widgetElement: widget.el

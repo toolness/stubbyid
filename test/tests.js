@@ -3,22 +3,17 @@ onload = function() {
   var stubby = navigator.id.stubby;
   var widget = stubby.widgetElement;
 
-  // IE8 Fixes.
-  if (!window.console) window.console = {};
-  if (!window.console.log) window.console.log = function() {};
+  // window.prompt isn't a function in IE8, which makes sinon complain.
   if (typeof(window.prompt) != "function") window.prompt = function() {};
 
   widget.style.display = "none";
+  stubby.onlog = function(msg) { log.push(msg); };
   module("stubbyid", {
     setup: function() {
       stubby.reset();
       log = [];
-      sinon.stub(window.console, "log", function(msg) {
-        log.push(msg);
-      });
     },
     teardown: function() {
-      window.console.log.restore();
     }
   });
 
@@ -33,7 +28,7 @@ onload = function() {
     });
     equal(onlogin.callCount, 0);
     equal(onlogout.callCount, 0);
-    deepEqual(log, ["STUBBYID: Client thinks the user is logged out " +
+    deepEqual(log, ["Client thinks the user is logged out " +
                     "and they want to be, so doing nothing."]);
   });
 
@@ -48,7 +43,7 @@ onload = function() {
     });
     equal(onlogin.callCount, 0);
     equal(onlogout.callCount, 0);
-    deepEqual(log, ["STUBBYID: Client thinks the user is logged in as " +
+    deepEqual(log, ["Client thinks the user is logged in as " +
                     "foo@example.com and they want to be, so doing " +
                     "nothing."]);
   });
@@ -64,9 +59,9 @@ onload = function() {
     });
     equal(onlogin.callCount, 0);
     equal(onlogout.callCount, 1);
-    deepEqual(log, ["STUBBYID: Client thinks the user is logged in as " +
+    deepEqual(log, ["Client thinks the user is logged in as " +
                     "foo@example.com but they want to be logged out.",
-                    "STUBBYID: Calling onlogout()."]);
+                    "Calling onlogout()."]);
   });
 
   test("loggedInUser=undefined, personaState=null", function() {
@@ -80,9 +75,9 @@ onload = function() {
     });
     equal(onlogin.callCount, 0);
     equal(onlogout.callCount, 1);
-    deepEqual(log, ["STUBBYID: Client doesn't know if user is logged in " +
+    deepEqual(log, ["Client doesn't know if user is logged in " +
                     "or not and they want to be logged out. ",
-                    "STUBBYID: Calling onlogout()."]);
+                    "Calling onlogout()."]);
   });
 
   test("loggedInUser=null, personaState=foo@example", function() {
@@ -97,9 +92,9 @@ onload = function() {
     equal(onlogin.callCount, 1);
     ok(onlogin.calledWith("foo@example.com"));
     equal(onlogout.callCount, 0);
-    deepEqual(log, ["STUBBYID: Client thinks the user is logged out but " +
+    deepEqual(log, ["Client thinks the user is logged out but " +
                     "they want to be logged in as foo@example.com.",
-                    "STUBBYID: Calling onlogin()."]);
+                    "Calling onlogin()."]);
   });
 
   test("loggedInUser=undefined, personaState=foo@example", function() {
@@ -114,10 +109,10 @@ onload = function() {
     equal(onlogin.callCount, 1);
     ok(onlogin.calledWith("foo@example.com"));
     equal(onlogout.callCount, 0);
-    deepEqual(log, ["STUBBYID: Client doesn't know if user is logged in " +
+    deepEqual(log, ["Client doesn't know if user is logged in " +
                     "or not and they want to be logged in as " +
                     "foo@example.com.",
-                    "STUBBYID: Calling onlogin()."]);
+                    "Calling onlogin()."]);
   });
 
   test("loggedInUser=bar@example, personaState=foo@example", function() {
@@ -132,10 +127,10 @@ onload = function() {
     equal(onlogin.callCount, 1);
     ok(onlogin.calledWith("foo@example.com"));
     equal(onlogout.callCount, 0);
-    deepEqual(log, ["STUBBYID: Client thinks the user is logged in as " +
+    deepEqual(log, ["Client thinks the user is logged in as " +
                     "bar@example.com but they want to be logged in as " +
                     "foo@example.com.",
-                    "STUBBYID: Calling onlogin()."]);
+                    "Calling onlogin()."]);
   });
 
   test("widget works when persona state is logged in", function() {

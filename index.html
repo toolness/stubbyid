@@ -10,22 +10,58 @@
   body.logged-out .unknown-login-only {
     display: none;
   }
+
+  .page-login {
+    border: 1px dotted gray;
+    padding: 4px;
+  }
   </style>
-  <title>StubbyId Example</title>
+  <title>stubbyid.js</title>
 </head>
 <body class="unknown">
-  <h1>StubbyId Example</h1>
-  <div class="unknown-login-only">
-    Please wait&hellip;
+  <h1>stubbyid.js</h1>
+  <p>stubbyid.js is a simple client-side "simulator" for 
+    <a href="http://persona.org">Persona</a>. It's a drop-in replacement 
+    for Persona's <code>include.js</code> script.</p>
+  <p>Persona's Observer API improves end-user sovereignty by allowing users
+    to globally log out of all the sites that they're logged into. However,
+    while this empowers users, it can make things a bit confusing for
+    developers. That's why stubbyid.js has a widget at the bottom-right of
+    any page it's included in, explaining what the "simulated Persona"
+    service thinks the user wants. It also logs messages to the console
+    explaining the rationale behind everything it does.</p>
+  <p>This can be used for a variety of purposes, such as:</p>
+  <ul>
+    <li>Local development, when persona.org is unreachable.</li>
+    <li>Writing functional tests in Selenium/WebDriver that abstract away the Persona UI.</li>
+    <li>Manual testing.</li>
+    <li>Personal edification.</li>
+  </ul>
+  <h2>Try It Out</h2>
+  <p>The area below represents what this page thinks your login state is,
+    while the widget at the bottom-right represents what Persona believes
+    it is. You can make changes to either and reload this page to
+    see what happens when stubbyid.js tries to reconcile out-of-sync
+    beliefs.</p>
+  <div class="page-login">
+    <div class="unknown-login-only">
+      Please wait&hellip;
+    </div>
+    <div class="logged-in-only">
+      Logged in as <span class="email"></span>.
+      <button onclick="navigator.id.logout();">Log out</button>
+    </div>
+    <div class="logged-out-only">
+      Logged out.
+      <button onclick="navigator.id.request();">Log in</button>
+    </div>
   </div>
-  <div class="logged-in-only">
-    Logged in as <span class="email"></span>.
-    <button onclick="navigator.id.logout();">Log out</button>
-  </div>
-  <div class="logged-out-only">
-    Logged out.
-    <button onclick="navigator.id.request();">Log in</button>
-  </div>
+  <h3>Log</h3>
+  <p>Below is a log of stubbyid.js's thought process as it simulates what
+    Persona does and reconciles the desires of the user with this page's
+    assumptions about login state. These messages are also logged
+    via <code>window.console</code>.</p>
+  <pre id="log"></pre>
   <script src="stubbyid.js"></script>
   <script>
   var KEY = "STUBBYID_EXAMPLE_CLIENT_STATE";
@@ -59,9 +95,19 @@
   }
 
   onload = function() {
+    navigator.id.stubby.onlog = function(msg) {
+      var log = document.getElementById("log");
+      var textNode = document.createTextNode(msg + '\n');
+      log.appendChild(textNode);
+    };
     navigator.id.watch({
       loggedInUser: loggedInUser,
       onlogin: function(assertion) {
+        // A real app would forward the assertion to its server for
+        // verification and receive the email. However, since we know
+        // we're integrating with StubbyId here and we don't have a
+        // server, we'll just take advantage of the knowledge that
+        // the "assertion" is actually an email address.
         state = "logged-in:" + assertion;
         sessionStorage.setItem(KEY, state);
         loggedInUser = assertion;
