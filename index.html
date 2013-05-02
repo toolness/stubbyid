@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <style>
+  body.logged-out .logged-in-only,
+  body.logged-in .logged-out-only,
+  body.unknown .logged-in-only,
+  body.unknown .logged-out-only,
+  body.logged-in .unknown-login-only,
+  body.logged-out .unknown-login-only {
+    display: none;
+  }
+  </style>
+  <title>StubbyId Example</title>
+</head>
+<body class="unknown">
+  <h1>StubbyId Example</h1>
+  <div class="unknown-login-only">
+    Please wait&hellip;
+  </div>
+  <div class="logged-in-only">
+    Logged in as <span class="email"></span>.
+    <button onclick="navigator.id.logout();">Log out</button>
+  </div>
+  <div class="logged-out-only">
+    Logged out.
+    <button onclick="navigator.id.request();">Log in</button>
+  </div>
+  <script src="stubbyid.js"></script>
+  <script>
+  var KEY = "STUBBYID_EXAMPLE_CLIENT_STATE";
+  var state = sessionStorage.getItem(KEY);
+  var loggedInUser;
+  var setText = function(element, text) {
+    if ('innerText' in element)
+      element.innerText = text;
+    else
+      element.textContent = text;
+  };
+  var updateState = function() {
+    if (loggedInUser) {
+      document.body.className = "logged-in";
+      var emails = document.querySelectorAll(".email");
+      for (var i = 0; i < emails.length; i++)
+        setText(emails[i], loggedInUser);
+    } else if (loggedInUser === null) {
+      document.body.className = "logged-out";
+    } else {
+      document.body.className = "unknown";
+    }
+  };
+
+  if (state) {
+    var parts = state.split(':');
+    if (parts[0] == 'logged-in')
+      loggedInUser = parts[1];
+    else if (parts[0] == 'logged-out')
+      loggedInUser = null;
+  }
+
+  onload = function() {
+    navigator.id.watch({
+      loggedInUser: loggedInUser,
+      onlogin: function(assertion) {
+        state = "logged-in:" + assertion;
+        sessionStorage.setItem(KEY, state);
+        loggedInUser = assertion;
+        updateState();
+      },
+      onlogout: function() {
+        state = "logged-out:";
+        sessionStorage.setItem(KEY, state);
+        loggedInUser = null;
+        updateState();
+      }
+    });
+    updateState();
+  };
+  </script>
+</body>
