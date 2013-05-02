@@ -37,6 +37,11 @@
     <li>Manual testing.</li>
     <li>Personal edification.</li>
   </ul>
+  <h2>Learn More</h2>
+  <p>You are welcome to <a href="stubbyid.js">view the source</a> and <a href="test/">run 
+    the tests</a>.</p>
+  <p>For more information on the behavior of Persona APIs, see the
+    documentation for <a href="https://developer.mozilla.org/en-US/docs/DOM/navigator.id.watch"><code>navigator.id.watch</code></a>.</p>
   <h2>Try It Out</h2>
   <p>The area below represents what this page thinks your login state is,
     while the widget at the bottom-right represents what Persona believes
@@ -49,10 +54,12 @@
     </div>
     <div class="logged-in-only">
       Logged in as <span class="email"></span>.
+      <button onclick="reset();">Reset login state to undefined</button>
       <button onclick="navigator.id.logout();">Log out</button>
     </div>
     <div class="logged-out-only">
       Logged out.
+      <button onclick="reset();">Reset login state to undefined</button>
       <button onclick="navigator.id.request();">Log in</button>
     </div>
   </div>
@@ -67,6 +74,10 @@
   var KEY = "STUBBYID_EXAMPLE_CLIENT_STATE";
   var state = sessionStorage.getItem(KEY);
   var loggedInUser;
+  var reset = function() {
+    sessionStorage.removeItem(KEY);
+    window.location.reload();
+  };
   var setText = function(element, text) {
     if ('innerText' in element)
       element.innerText = text;
