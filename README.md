@@ -86,6 +86,11 @@ cause it to be called whenever stubbyid.js logs anything to the console.
 
 The DOM element containing the Persona simulator widget.
 
+## Limitations
+
+stubbyid.js only provides an interface for Persona's Observer API. That means
+it doesn't provide `navigator.id.get()` or `navigator.id.getVerifiedEmail()`.
+
   [Persona]: http://persona.org/
   [Observer API]: https://developer.mozilla.org/en-US/docs/DOM/navigator.id
   [homepage]: http://toolness.github.com/stubbyid/
