@@ -1,7 +1,7 @@
 stubbyid.js is a simple client-side "simulator" for [Persona][].
 It's a drop-in replacement for Persona's `include.js` script.
 
-Persona's Observer API improves end-user sovereignty by allowing users to 
+Persona's [Observer API][] improves end-user sovereignty by allowing users to 
 globally log out of all the sites that they're logged into. However, while 
 this empowers users, it can make things a bit confusing for developers. That's
 why stubbyid.js has a widget at the bottom-right of any page it's included in, 
@@ -87,4 +87,5 @@ cause it to be called whenever stubbyid.js logs anything to the console.
 The DOM element containing the Persona simulator widget.
 
   [Persona]: http://persona.org/
+  [Observer API]: https://developer.mozilla.org/en-US/docs/DOM/navigator.id
   [homepage]: http://toolness.github.com/stubbyid/
