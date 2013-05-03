@@ -16,10 +16,13 @@
       }
     },
     init: function() {
-      widget.el.style.position = "absolute";
+      widget.el.style.position = "fixed";
       widget.el.style.bottom = "0";
       widget.el.style.right = "0";
-      widget.el.style.backgroundColor = "lightgray";
+      widget.el.style.color = "white";
+      widget.el.style.fontFamily = "Helvetica, Arial, sans-serif";
+      widget.el.style.fontSize = "12px";
+      widget.el.style.backgroundColor = "rgba(0, 0, 0, 0.75)";
       widget.el.style.padding = "4px";
       widget.el.style.zIndex = "100000";
       attach(widget.el, "click", function(event) {
