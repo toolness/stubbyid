@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="bootstrap.css">
   <style>
   body.logged-out .logged-in-only,
   body.logged-in .logged-out-only,
@@ -10,15 +11,11 @@
   body.logged-out .unknown-login-only {
     display: none;
   }
-
-  .page-login {
-    border: 1px dotted gray;
-    padding: 4px;
-  }
   </style>
   <title>stubbyid.js</title>
 </head>
 <body class="unknown">
+  <div class="container">
   <a href="https://github.com/toolness/stubbyid"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
   <h1>stubbyid.js</h1>
   <p>stubbyid.js is a simple client-side "simulator" for 
@@ -51,7 +48,7 @@
     it is. You can make changes to either and reload this page to
     see what happens when stubbyid.js tries to reconcile out-of-sync
     beliefs.</p>
-  <div class="page-login">
+  <div class="well">
     <div class="unknown-login-only">
       Please wait&hellip;
     </div>
@@ -72,6 +69,7 @@
     assumptions about login state. These messages are also logged
     via <code>window.console</code>.</p>
   <pre id="log"></pre>
+  </div>
   <script src="stubbyid.js"></script>
   <script>
   var KEY = "STUBBYID_EXAMPLE_CLIENT_STATE";
