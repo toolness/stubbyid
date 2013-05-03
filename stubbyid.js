@@ -7,12 +7,12 @@
     update: function() {
       var state = getLoginState();
       if (state) {
-        widget.el.innerHTML = 'Persona thinks user wants to be logged in ' +
-                              'as <strong>' + escapeHtml(state) +
+        widget.el.innerHTML = 'Persona simulator thinks you want to ' +
+                              'be logged in as <strong>' + escapeHtml(state) +
                               '</strong>. <button>logout</button>';
       } else {
-        widget.el.innerHTML = 'Persona thinks user wants to be logged out. ' +
-                              '<button>login</button>';
+        widget.el.innerHTML = 'Persona simulator thinks you want to ' +
+                              'be logged out. <button>login</button>';
       }
     },
     init: function() {
