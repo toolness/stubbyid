@@ -1,3 +1,7 @@
+// stubbyid.js v0.2
+// A simple client-side "simulator" for the Persona login service.
+// https://github.com/toolness/stubbyid
+
 (function() {
   "use strict";
 
