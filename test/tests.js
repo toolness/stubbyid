@@ -212,9 +212,35 @@ onload = function() {
     equal(stubby.getPersonaState(), null);
   });
 
-  test("navigator.id.get() throws unimplemented error", function() {
-    throws(function() {
-      navigator.id.get();
-    }, /only the Observer API is supported/);
+  test("navigator.id.get() asks for email", function() {
+    var gotAssertion = sinon.spy();
+    sinon.stub(window, "prompt", function(prompt) {
+      return "lol@cat.org";
+    });
+    sinon.stub(window, "setTimeout");
+
+    try {
+      navigator.id.get(gotAssertion);
+
+      equal(window.prompt.callCount, 1);
+      equal(window.setTimeout.callCount, 1);
+      equal(window.setTimeout.firstCall.args[1], 1);
+      equal(gotAssertion.callCount, 0);
+
+      // Simulate the triggering of the timeout.
+      window.setTimeout.firstCall.args[0]();
+
+      equal(gotAssertion.callCount, 1);
+      deepEqual(gotAssertion.firstCall.args, ["lol@cat.org"]);
+      equal(stubby.getPersonaState(), null,
+            "persona state should not be changed after navigator.id.get()");
+    } finally {
+      window.setTimeout.restore();
+      window.prompt.restore();
+    }
+  });
+
+  test("navigator.id.getVerifiedEmail() is same as .get()", function() {
+    equal(navigator.id.get, navigator.id.getVerifiedEmail);
   });
 };

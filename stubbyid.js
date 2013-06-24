@@ -186,10 +186,13 @@
     logout: function navigator_id_logout() {
       setLoginState(null);
     },
-    get: function navigator_id_get() {
-      fail("only the Observer API is supported");
+    get: function navigator_id_get(gotAssertion) {
+      var email = window.prompt("Enter email address") || null;
+      window.setTimeout(function() { gotAssertion(email); }, 1);
     }
   };
+
+  window.navigator.id.getVerifiedEmail = window.navigator.id.get;
 
   if (document.readyState == "complete")
     widget.init();
