@@ -1,4 +1,4 @@
-// stubbyid.js v0.2
+// stubbyid.js v0.2.1
 // A simple client-side "simulator" for the Persona login service.
 // https://github.com/toolness/stubbyid
 
@@ -29,6 +29,7 @@
       widget.el.style.backgroundColor = "rgba(0, 0, 0, 0.75)";
       widget.el.style.padding = "4px";
       widget.el.style.zIndex = "100000";
+      widget.el.className = "stubbyid";
       attach(widget.el, "click", function(event) {
         if (target(event).nodeName == "BUTTON") {
           if (getLoginState())
